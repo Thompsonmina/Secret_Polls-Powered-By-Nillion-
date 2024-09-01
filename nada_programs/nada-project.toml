@@ -1,0 +1,23 @@
+name = "nada_quickstart_programs"
+version = "0.1.0"
+authors = [""]
+
+[[programs]]
+path = "src/main.py"
+prime_size = 128
+
+[[programs]]
+path = "src/secret_addition.py"
+name = "secret_addition"
+prime_size = 128
+
+[[programs]]
+path = "src/oneone.py"
+name = "oneone"
+prime_size = 128
+
+
+[[programs]]
+path = "src/np.py"
+name = "np"
+prime_size = 128
