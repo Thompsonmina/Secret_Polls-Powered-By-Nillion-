@@ -2,7 +2,7 @@
 program: oneone
 inputs:
   tc1:
-    SecretInteger: "3"
+    SecretInteger: "11"
   tc2:
     SecretInteger: "5"
   tc3:
