@@ -27,7 +27,7 @@ export function CreatePollForm() {
       visibility,
       passcode: visibility === "private" ? passcode : null, // Only include passcode if it's private
       expiration,
-      participants,
+      max_participants: participants,
     };
 
     console.log("Poll created:", pollData);
