@@ -4,13 +4,28 @@ import { useState } from "react";
 import { Box, Button, MenuItem, TextField } from "@mui/material";
 import dayjs from 'dayjs';  // Install if not already present for date handling
 
-export function CreatePollForm() {
+
+import { useNilCompute, useNillion } from "@nillion/client-react-hooks";
+import {
+    PartyName,
+} from "@nillion/client-core";
+
+  
+
+
+export  function CreatePollForm() {
   const [question, setQuestion] = useState("");
   const [options, setOptions] = useState(["", "", "", ""]);
   const [visibility, setVisibility] = useState("public");
   const [passcode, setPasscode] = useState(""); // For private poll passcode
   const [expiration, setExpiration] = useState(dayjs().add(3, 'day').format('YYYY-MM-DD')); // Default to 3 days
   const [participants, setParticipants] = useState(5); // Default participants is 5
+    
+  const { client } = useNillion();
+  
+
+    
+   const apiUrl = process.env.NEXT_PUBLIC_SECRET_POLLS_API_URL;
 
   const handleOptionChange = (index: number, value: string) => {
     const updatedOptions = [...options];
@@ -18,9 +33,11 @@ export function CreatePollForm() {
     setOptions(updatedOptions);
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
+      console.log(client.partyId)
+      console.log(client.userId)
+    
     const pollData = {
       question,
       options,
@@ -28,8 +45,29 @@ export function CreatePollForm() {
       passcode: visibility === "private" ? passcode : null, // Only include passcode if it's private
       expiration,
       max_participants: participants,
+      poll_owner_id: client.partyId
     };
 
+    try {
+        const response = await fetch(`${apiUrl}/polls`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(pollData),
+        });
+    
+        if (response.ok) {
+          const result = await response.json();
+          console.log("Poll created yooo:", result);
+        } else {
+          const errorData = await response.json();
+          console.error("Error creating poll:", errorData);
+        }
+      } catch (error) {
+        console.error("Error creating poll:", error);
+    }
+      
     console.log("Poll created:", pollData);
     // Send the data to the backend API
   };
@@ -78,8 +116,8 @@ export function CreatePollForm() {
       >
         <MenuItem value="public">Public</MenuItem>
         <MenuItem value="private">Private</MenuItem>
-        <MenuItem value="anyone_with_link_public">Anyone with Link (Public)</MenuItem>
-        <MenuItem value="anyone_with_link_private">Anyone with Link (Private)</MenuItem>
+        <MenuItem value="link_public">Anyone with Link (Public)</MenuItem>
+        <MenuItem value="link_private">Anyone with Link (Private)</MenuItem>
       </TextField>
 
       {/* Conditionally show Passcode if Visibility is Private */}

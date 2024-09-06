@@ -1,4 +1,6 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
+
 from model import db, Poll, create_poll, get_poll_by_id, add_participant_to_poll
 from config import Config
 
@@ -11,6 +13,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Initialize the database with the Flask app
 db.init_app(app)
+CORS(app)
 
 
 # Define a basic route
@@ -23,18 +26,22 @@ def create_poll_route():
     data = request.json
 
     # Validate required fields
-    required_fields = ['question', 'option_1', 'option_2', 'option_3', 'option_4', 'visibility', 'poll_owner_id']
+    required_fields = ['question', 'options', 'visibility', 'poll_owner_id']
     missing_fields = [field for field in required_fields if field not in data]
     if missing_fields:
         return jsonify({"error": f"Missing fields: {', '.join(missing_fields)}"}), 400
 
+    # Extract options array into individual options
+    if len(data['options']) < 4:
+        return jsonify({"error": "At least 4 options are required"}), 400
+
     # Create the poll using the create_poll function from model.py
     poll = create_poll(
         question=data['question'],
-        option_1=data['option_1'],
-        option_2=data['option_2'],
-        option_3=data['option_3'],
-        option_4=data['option_4'],
+        option_1=data['options'][0],
+        option_2=data['options'][1],
+        option_3=data['options'][2],
+        option_4=data['options'][3],
         visibility=data['visibility'],
         poll_owner_id=data['poll_owner_id'],
         max_participants_count=data.get('max_participants', 5)  # Default: 5 participants if not provided

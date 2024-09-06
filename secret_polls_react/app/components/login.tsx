@@ -13,7 +13,7 @@ import {
 import { createSignerFromKey } from "@nillion/client-payments";
 import { useNillionAuth, UserCredentials } from "@nillion/client-react-hooks";
 
-export const Login: FC = () => {
+export const Login: FC<{ onLoginSuccess: () => void;}> = ({ onLoginSuccess }) => {
   const { authenticated, login, logout } = useNillionAuth();
 
   const [useKeplr, setUseKeplr] = useState(false);
@@ -136,7 +136,7 @@ export const Login: FC = () => {
             variant="outlined"
             sx={{
               position: "fixed",
-              top: "80px", // Adjust depending on your navbar height
+              top: "80px", // 
               right: "20px",
               zIndex: 1000, // Ensure it's above other content
             }}

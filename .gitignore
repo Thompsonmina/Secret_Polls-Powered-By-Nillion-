@@ -36,3 +36,5 @@ notes.txt
 
 **/.venv/
 **/venv/
+
+**/.env*

@@ -1,10 +1,28 @@
-import { type FC } from "react";
-import { ClientWrapper } from "@/app/components";
+"use client";
+
+import { type FC, useState } from "react";
+import { ClientWrapper, Login } from "@/app/components";
+import { Box, CircularProgress } from "@mui/material";
+
 
 const HomeLayout: FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
-  return <ClientWrapper>{children}</ClientWrapper>;
+
+  const [authenticated, setAuthenticated] = useState(false);  // Manage authentication state here
+  
+
+  const handleLoginSuccess = () => {
+    setAuthenticated(true);
+  };
+
+  console.log(authenticated)
+
+
+  return <ClientWrapper>
+        <Login onLoginSuccess={handleLoginSuccess} />
+        {children}
+  </ClientWrapper>;
 };
 
 export default HomeLayout;

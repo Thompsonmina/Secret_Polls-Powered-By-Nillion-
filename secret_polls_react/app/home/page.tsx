@@ -20,7 +20,6 @@ const LoginLayout: FC = () => {
   return (
     <>
     <Box sx={{ m: 4, display: "flex", flexDirection: "column", gap: 4 }}>
-      <Login />
       <StoreValue />
       <FetchValue />
       <UpdateValue />
