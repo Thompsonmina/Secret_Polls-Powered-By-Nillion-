@@ -1,12 +1,24 @@
 ---
 program: poll
 inputs:
-  poll_1_p0_response0:
-    SecretInteger: "1"
-  poll_1_p1_response1:
+  poll_3_p1_response1:
+    SecretInteger: "3"
+  poll_3_p4_response4:
+    SecretInteger: "4"
+  poll_3_p2_response2:
+    SecretInteger: "3"
+  poll_3_p0_response0:
+    SecretInteger: "3"
+  poll_3_p3_response3:
     SecretInteger: "2"
   starting_val:
     SecretInteger: "0"
 expected_outputs:
-  "0":
+  option-3:
+    SecretInteger: "3"
+  option-2:
+    SecretInteger: "3"
+  option-1:
+    SecretInteger: "3"
+  option-4:
     SecretInteger: "3"
