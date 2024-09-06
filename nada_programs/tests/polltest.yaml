@@ -1,0 +1,12 @@
+---
+program: poll
+inputs:
+  poll_1_p0_response0:
+    SecretInteger: "1"
+  poll_1_p1_response1:
+    SecretInteger: "2"
+  starting_val:
+    SecretInteger: "0"
+expected_outputs:
+  "0":
+    SecretInteger: "3"

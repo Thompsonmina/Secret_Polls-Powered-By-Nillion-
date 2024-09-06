@@ -12,12 +12,11 @@ name = "secret_addition"
 prime_size = 128
 
 [[programs]]
-path = "src/oneone.py"
-name = "oneone"
+path = "src/poker.py"
+name = "poker"
 prime_size = 128
 
-
 [[programs]]
-path = "src/np.py"
-name = "np"
+path = "src/poll.py"
+name = "poll"
 prime_size = 128

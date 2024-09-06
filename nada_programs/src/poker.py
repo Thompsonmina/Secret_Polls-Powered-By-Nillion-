@@ -4,7 +4,7 @@ def nada_main():
 
     # party1 = Party(name="Party1")
     # party2 = Party(name="Party2")
-    
+
     party3 = Party(name="Party3")
 
     # da1 = SecretInteger(Input(name="da1", party=party1))
@@ -20,20 +20,37 @@ def nada_main():
     tc3 = SecretInteger(Input(name="tc3", party=party3))
     tc4 = SecretInteger(Input(name="tc4", party=party3))
     tc5 = SecretInteger(Input(name="tc5", party=party3))
-
+    
     table_cards = [tc1, tc2, tc3, tc4, tc5]
 
     ranks_suite = [ (get_suite(c), get_rank(c)) for c in table_cards]
 
-    # return [Output(get_rank(da1), "my_output", party1)]
+    # return [Output(get_rank(tc3), "my_output", party3)]
 
-    b = (Integer(2), Integer(55))
-    bc = [b]
+    cards = create_histogram(ranks_suite, nada_not, nada_and)
 
-    r = create_histogram(ranks_suite, nada_not, nada_and)
+    largest = largest_pair([ c[2] for c in cards ])
+
+    is_4_of_kind = largest[0] == Integer(4)
+    is_full_house = nada_and((largest[0] == Integer(3)), (largest[1] == Integer(2)))
+    is_3_of_kind = nada_and((largest[0] == Integer(3)), (largest[1] == Integer(1)))
+    is_2_pair = nada_and((largest[0] == Integer(2)), (largest[1] == Integer(2)))
+    is_1_pair = nada_and((largest[0] == Integer(2)), (largest[1] == Integer(1)))
+
+    x_arr = (Integer(1),)
+    n = nada_not(tc1 == Integer(3))
+    # n = nada_not(largest[0] == Integer(3))
+    # a = nada_and((Integer(2) == Integer(3)), (Integer(43) == Integer(21)))
+    # o = nada_or((Integer(2) == Integer(3)), (Integer(4) == Integer(4)))
+    
+    # return [Output(o.if_else(Integer(10), Integer(100)), "orcheck", party3)]
 
 
-    return [Output(r[i][2], "my_output" + str(i), party1) for i in range(5)]
+
+
+    return [Output(Integer(3), "my_output" + str(i), party3) for i in range(2)]
+    # return [Output(largest[i], "my_output" + str(i), party3) for i in range(2)]
+
 
 def get_suite(num: SecretInteger) -> SecretInteger:
     return num / Integer(13)
@@ -46,6 +63,42 @@ def nada_not(bool: Boolean) -> Boolean:
 
 def nada_and(bool1: Boolean, bool2: Boolean) ->  Boolean:
     return bool1.if_else(bool2.if_else(Integer(1), Integer(0)), Integer(0)) == Integer(1)
+
+def nada_or(bool1: Boolean, bool2: Boolean) ->  Boolean:
+    return bool1.if_else(bool2.if_else(Integer(1), Integer(0)), Integer(0)) == Integer(1)
+    return bool1.if_else(Integer(1), bool2.if_else(Integer(1), Integer(0))) == Integer(1)
+
+def largest_pair(array: List[Integer]) -> Tuple[Integer, Integer]:
+    
+    # largest_index = (array[0] > array[1]).if_else(Integer(0), Integer(1))
+    # second_largest_index = Integer(1) - largest_index
+
+
+
+    largest_num = (array[0] > array[1]).if_else(array[0], array[1])
+    second_largest_num = (largest_num == array[0]).if_else(array[1], array[0])
+
+    for i in range(2, 5):
+        is_largest_still_large = largest_num > array[i]
+
+        # if the currently largest number isnt larger than the current number then check if its larger than second largest
+        second_largest_num = is_largest_still_large.if_else((second_largest_num > array[i]).if_else(second_largest_num, array[i]), largest_num)
+        largest_num = is_largest_still_large.if_else(largest_num, array[i])
+
+        # second_largest_index = is_largest_still_large.if_else((array[second_largest_index] > array[i]).if_else(second_largest_index, i), largest_index)
+        # largest_index = is_largest_still_large.if_else(largest_index, i)
+
+    return (largest_num, second_largest_num)
+
+def is_flush(array: List[Integer], or_op: nada_fn) -> Boolean:
+
+    same_suite = Boolean(True)
+    product = Integer(1)
+    for i in range(5):
+        product = product * array[i]
+
+    return or_op((product == Integer(1)), (product == Integer(32)))
+
 
 def create_histogram(array: List[Tuple[SecretInteger, SecretInteger]], not_op: nada_fn, and_op: nada_fn) -> List[List[SecretInteger]]:
     """ Creates a histogram based on rank that we eventually use to evalute our hand"""

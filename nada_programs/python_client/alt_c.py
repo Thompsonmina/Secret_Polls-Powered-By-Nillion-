@@ -54,57 +54,64 @@ async def main():
     )
     print(os.getenv("NILLION_NILCHAIN_PRIVATE_KEY_0"))
 
-    # Pay to store the program and obtain a receipt of the payment
-    receipt_store_program = await get_quote_and_pay(
-        client,
-        nillion.Operation.store_program(program_mir_path),
-        payments_wallet,
-        payments_client,
-        cluster_id,
-    )
+    # # Pay to store the program and obtain a receipt of the payment
+    # receipt_store_program = await get_quote_and_pay(
+    #     client,
+    #     nillion.Operation.store_program(program_mir_path),
+    #     payments_wallet,
+    #     payments_client,
+    #     cluster_id,
+    # )
 
-    print("trying to store program")
+    # print("trying to store program")
 
-    # Store the program
-    action_id = await client.store_program(
-        cluster_id, program_name, program_mir_path, receipt_store_program
-    )
+    # # Store the program
+    # action_id = await client.store_program(
+    #     cluster_id, program_name + "_aa", program_mir_path, receipt_store_program
+    # )
 
-    # Create a variable for the program_id, which is the {user_id}/{program_name}. We will need this later
-    program_id = f"{user_id}/{program_name}"
-    print("Stored program. action_id:", action_id)
-    print("Stored program_id:", program_id)
+    # # Create a variable for the program_id, which is the {user_id}/{program_name}. We will need this later
+    # program_id = f"{user_id}/{program_name}"
+    # print(user_id)
+    # print("Stored program. action_id:", action_id)
+    # print("Stored program_id:", program_id)
+
+    program_id = "3rgqxWd47e171EUwe4RXP9hm45tmoXfuF8fC52S7jcFoQTnU8wPiL7hqWzyV1muak6bEg7iWhudwg4t2pM9XnXcp/secret_addition_aa"
+    # exit()
 
     # 4. Create the 1st secret, add permissions, pay for and store it in the network
     # Create a secret named "my_int1" with any value, ex: 500
-    new_secret = nillion.NadaValues(
-        {
-            "my_int1": nillion.SecretInteger(500),
-        }
-    )
+    # new_secret = nillion.NadaValues(
+    #     {
+    #         "my_int1": nillion.SecretInteger(50),
+    #     }
+    # )
 
-    # Set the input party for the secret
-    # The party name needs to match the party name that is storing "my_int1" in the program
+   
+
+    # # Set permissions for the client to compute on the program
+    # permissions = nillion.Permissions.default_for_user(client.user_id)
+    # permissions.add_compute_permissions({client.user_id: {program_id}})
+
+    # # Pay for and store the secret in the network and print the returned store_id
+    # receipt_store = await get_quote_and_pay(
+    #     client,
+    #     nillion.Operation.store_values(new_secret, ttl_days=5),
+    #     payments_wallet,
+    #     payments_client,
+    #     cluster_id,
+    # )
+    # # Store a secret
+    # store_id = await client.store_values(
+    #     cluster_id, new_secret, permissions, receipt_store
+    # )
+    # print(f"Computing using program {program_id}")
+    # print(f"Use secret store_id: {store_id}")
+
+    # # Set the input party for the secret
+    # # The party name needs to match the party name that is storing "my_int1" in the program
     party_name = "Party1"
-
-    # Set permissions for the client to compute on the program
-    permissions = nillion.Permissions.default_for_user(client.user_id)
-    permissions.add_compute_permissions({client.user_id: {program_id}})
-
-    # Pay for and store the secret in the network and print the returned store_id
-    receipt_store = await get_quote_and_pay(
-        client,
-        nillion.Operation.store_values(new_secret, ttl_days=5),
-        payments_wallet,
-        payments_client,
-        cluster_id,
-    )
-    # Store a secret
-    store_id = await client.store_values(
-        cluster_id, new_secret, permissions, receipt_store
-    )
-    print(f"Computing using program {program_id}")
-    print(f"Use secret store_id: {store_id}")
+    store_id = "10990e1c-af8e-4e25-8e47-2fb9c3027707"
 
     # 5. Create compute bindings to set input and output parties, add a computation time secret and pay for & run the computation
     compute_bindings = nillion.ProgramBindings(program_id)

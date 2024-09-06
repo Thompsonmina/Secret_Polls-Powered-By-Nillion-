@@ -2,15 +2,15 @@
 program: oneone
 inputs:
   tc1:
-    SecretInteger: "11"
-  tc2:
-    SecretInteger: "5"
-  tc3:
-    SecretInteger: "6"
-  tc4:
     SecretInteger: "3"
+  tc2:
+    SecretInteger: "3"
+  tc3:
+    SecretInteger: "1"
+  tc4:
+    SecretInteger: "5"
   tc5:
-    SecretInteger: "9"
+    SecretInteger: "5"
 expected_outputs:
   my_output:
     SecretInteger: "5"
