@@ -44,8 +44,10 @@ const PollPage = () => {
   if (!pollData) {
     return <Typography>Loading poll data...</Typography>;
   }
-  console.log(role, "role")
-  
+    console.log(role, "role")
+    
+    console.log(pollData)
+
 
   return (
     <Box sx={{ p: 4 }}>
@@ -70,8 +72,9 @@ const PollPage = () => {
           question={pollData.question}
                   options={pollData.options}
                   status={pollData.pollStatus}
-                  owner_id={pollData.ownerId}
+                  owner_user_id={pollData.ownerId}
                   poll_id={pollData.id}
+                  current_participants={pollData.current_participants}
         />
       )}
 

@@ -28,6 +28,7 @@ export const usePoll = () => {
       ownerId: "123", // Example owner ID
       pollStatus: "active", // Can be "active" or "completed" or closed or paused or expired
       currentUserId: "1277893", // The current logged-in user
+      current_participants: 0
     };
   }
 

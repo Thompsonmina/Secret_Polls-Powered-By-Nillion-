@@ -6,15 +6,23 @@ import { LoadingButton } from "@mui/lab";
 import { Box, TextField, Typography } from "@mui/material";
 
 import { useNilStoreValue } from "@nillion/client-react-hooks";
+import { useNilCompute, useNillion } from "@nillion/client-react-hooks";
+
 
 export const StoreValue: FC = () => {
   const nilStore = useNilStoreValue();
   const [secret, setSecret] = useState<number | null>(null);
+  const { client } = useNillion();
 
   const handleClick = () => {
     if (!secret) throw new Error("store-value: Value required");
     nilStore.execute({ name: "data", data: secret, ttl: 1 }!);
   };
+
+  console.log(client.partyId)
+  console.log(client)
+
+
 
   return (
     <Box

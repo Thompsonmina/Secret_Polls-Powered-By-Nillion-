@@ -1,25 +1,83 @@
 "use client";
 
 import { Box, Typography, Radio, RadioGroup, FormControlLabel, Button } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
+
 import { useState } from "react";
+
+import { useNilStoreValue } from "@nillion/client-react-hooks";
+import { useNilCompute, useNillion } from "@nillion/client-react-hooks";
+
 
 type ParticipantPollProps = {
   question: string;
   options: string[];
   status: string;   // Poll status (e.g., "active", "paused", "expired", "closed")
-  user_id: string;  // User ID to identify the participant
-  poll_id: string;  // Poll ID to identify the poll
+  owner_user_id: string;  // User ID to identify the participant
+  poll_id: string;  // Poll ID to identify the poll\
+  current_participants: number;
 };
 
-export const ParticipantPollView: React.FC<ParticipantPollProps> = ({ question, options, status, user_id, poll_id }) => {
-  const [selectedOption, setSelectedOption] = useState("");
-  const [submitSuccess, setSubmitSuccess] = useState<boolean | null>(null); // Track submission success
+export const ParticipantPollView: React.FC<ParticipantPollProps> = ({ question, options, status, owner_user_id, poll_id, current_participants }) => {
+    const [selectedOption, setSelectedOption] = useState("");
+    const [submitSuccess, setSubmitSuccess] = useState<boolean | null>(null); // Track submission success
+    const [loading, setLoading] = useState(false);
+    const [storedId, setStoredId] = useState<string | null>(null);
+
+    const nilStore = useNilStoreValue();
+    const { client } = useNillion();
+
+
+
+    const store_poll_response = (): any => {
+        const option_val = options.indexOf(selectedOption) + 1
+        console.log(option_val, "options man")
+        const input_name = `poll_${poll_id}_p${current_participants + 1}_response`
+
+        console.log("storing secret response", input_name)
+        //   if (!secret) throw new Error("store-value: Value required");
+        return nilStore.executeAsync({ name: input_name, data: option_val, ttl: 1 }!);
+    }
+    
 
   const handleSubmit = async () => {
     if (!selectedOption) {
-      console.log("No option selected");
+        console.log("No option selected");
       return;
     }
+      
+      setLoading(true);  // Show spinner while executing
+
+    try {
+        // Execute the function and wait for the result
+        const storeId = await store_poll_response()
+
+        // Store the resulting ID or any data from the result
+
+        setStoredId(storeId); 
+        console.log("Stored ID:", storeId);
+
+    } catch (error) {
+        console.error("Error storing value:", error);
+    } finally {
+        setLoading(false);  // Hide spinner after the operation completes
+    }
+      
+      
+
+      
+      
+      
+        
+    
+      let input_name = `poll_${poll_id}_p${current_participants + 1}_response`
+      let party_id = client.partyId
+      let party_name = `Participant{i}`
+      let store_id = "blah blah"
+
+    //   ## we need to give the val being stored compute permissions which means computing the program_id. Program id is just user_id/program_name
+    // program name should be like
+      let program_name = `poll_${poll_id}`
 
     try {
       // Simulate sending the vote to an API
@@ -97,15 +155,17 @@ export const ParticipantPollView: React.FC<ParticipantPollProps> = ({ question, 
         </Typography>
       )}
 
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={handleSubmit}
-        sx={{ mt: 4 }}
-        disabled={!selectedOption || isPollInactive}  // Disable button if no option selected or poll is inactive
-      >
-        Submit Vote
-      </Button>
+        <LoadingButton
+            variant="contained"
+            color="primary"
+            onClick={handleSubmit}
+            loading={loading}
+            sx={{ mt: 4 }}
+            disabled={!selectedOption || isPollInactive}  // Disable button if no option selected or poll is inactive
+        >
+        Submit Vote -- {nilStore.isSuccess ? nilStore.data : "idle"}
+        </LoadingButton>
+          
 
       {/* Display submission result */}
       {submitSuccess && (

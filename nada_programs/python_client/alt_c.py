@@ -19,8 +19,8 @@ from cosmpy.aerial.wallet import LocalWallet
 from cosmpy.crypto.keypairs import PrivateKey
 
 home = os.getenv("HOME")
-# load_dotenv(f"{home}/.config/nillion/nillion-devnet.env")
-load_dotenv(".env")
+load_dotenv(f"{home}/.config/nillion/nillion-devnet.env")
+# load_dotenv(".env")
 
 async def main():
     # 1. Initial setup
@@ -54,30 +54,30 @@ async def main():
     )
     print(os.getenv("NILLION_NILCHAIN_PRIVATE_KEY_0"))
 
-    # # Pay to store the program and obtain a receipt of the payment
-    # receipt_store_program = await get_quote_and_pay(
-    #     client,
-    #     nillion.Operation.store_program(program_mir_path),
-    #     payments_wallet,
-    #     payments_client,
-    #     cluster_id,
-    # )
+    # Pay to store the program and obtain a receipt of the payment
+    receipt_store_program = await get_quote_and_pay(
+        client,
+        nillion.Operation.store_program(program_mir_path),
+        payments_wallet,
+        payments_client,
+        cluster_id,
+    )
 
-    # print("trying to store program")
+    print("trying to store program")
 
-    # # Store the program
-    # action_id = await client.store_program(
-    #     cluster_id, program_name + "_aa", program_mir_path, receipt_store_program
-    # )
+    # Store the program
+    action_id = await client.store_program(
+        cluster_id, program_name + "_aa", program_mir_path, receipt_store_program
+    )
 
-    # # Create a variable for the program_id, which is the {user_id}/{program_name}. We will need this later
-    # program_id = f"{user_id}/{program_name}"
-    # print(user_id)
-    # print("Stored program. action_id:", action_id)
-    # print("Stored program_id:", program_id)
+    # Create a variable for the program_id, which is the {user_id}/{program_name}. We will need this later
+    program_id = f"{user_id}/{program_name}"
+    print(user_id)
+    print("Stored program. action_id:", action_id)
+    print("Stored program_id:", program_id)
 
-    program_id = "3rgqxWd47e171EUwe4RXP9hm45tmoXfuF8fC52S7jcFoQTnU8wPiL7hqWzyV1muak6bEg7iWhudwg4t2pM9XnXcp/secret_addition_aa"
-    # exit()
+    # program_id = "3rgqxWd47e171EUwe4RXP9hm45tmoXfuF8fC52S7jcFoQTnU8wPiL7hqWzyV1muak6bEg7iWhudwg4t2pM9XnXcp/secret_addition_aa"
+    exit()
 
     # 4. Create the 1st secret, add permissions, pay for and store it in the network
     # Create a secret named "my_int1" with any value, ex: 500

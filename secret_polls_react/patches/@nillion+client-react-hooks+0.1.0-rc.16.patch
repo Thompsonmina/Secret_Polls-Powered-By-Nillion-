@@ -1,0 +1,14 @@
+diff --git a/node_modules/@nillion/client-react-hooks/src/nillion-provider.tsx b/node_modules/@nillion/client-react-hooks/src/nillion-provider.tsx
+index 44361e3..9bc3036 100644
+--- a/node_modules/@nillion/client-react-hooks/src/nillion-provider.tsx
++++ b/node_modules/@nillion/client-react-hooks/src/nillion-provider.tsx
+@@ -64,6 +64,9 @@ export const NillionProvider: React.FC<
+   const [queryClient] = useState<QueryClient>(new QueryClient());
+   const [nillionClient] = useState<NillionClient>(client);
+ 
++  console.log(props, "inside nill provider")
++  Log(props, "inside nill provider")
++  
+   const { children, network, config } = props;
+ 
+   useEffect(() => {

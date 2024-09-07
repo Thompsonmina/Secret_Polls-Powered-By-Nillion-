@@ -12,6 +12,8 @@ import {
 
 import { createSignerFromKey } from "@nillion/client-payments";
 import { useNillionAuth, UserCredentials } from "@nillion/client-react-hooks";
+import { useNilCompute, useNillion } from "@nillion/client-react-hooks";
+
 
 export const Login: FC<{ onLoginSuccess: () => void;}> = ({ onLoginSuccess }) => {
   const { authenticated, login, logout } = useNillionAuth();
@@ -23,6 +25,9 @@ export const Login: FC<{ onLoginSuccess: () => void;}> = ({ onLoginSuccess }) =>
   );
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+  const { client } = useNillion();
+
 
   const handleToggle = () => {
     setUseKeplr(!useKeplr);
@@ -37,7 +42,9 @@ export const Login: FC<{ onLoginSuccess: () => void;}> = ({ onLoginSuccess }) =>
       if (!useKeplr) {
         credentials.signer = () => createSignerFromKey(secretKey);
       }
+      console.log(client, "b4")
       await login(credentials);
+      console.log(client, "after")
       setIsLoggingIn(false);
       onLoginSuccess()
     } catch (err) {
