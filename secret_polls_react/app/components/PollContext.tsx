@@ -25,7 +25,7 @@ export const usePoll = () => {
       totalVotes: 100,
       votes: [50, 30, 10, 10], // votes for each option
       ownerId: "123", // Example owner ID
-      pollStatus: "active", // Can be "active" or "completed"
+      pollStatus: "completed", // Can be "active" or "completed"
       currentUserId: "1277893", // The current logged-in user
     };
   }
@@ -34,7 +34,8 @@ export const usePoll = () => {
     if (id && typeof id == 'string') {
       fetchPollData(id).then((data) => {
         setPollData(data);  // Set the poll data
-
+        
+        console.log(data.pollStatus)
         // Determine the role based on API data
         if (data.pollStatus === "completed") {
           setRole("result");  // If poll is completed, show results

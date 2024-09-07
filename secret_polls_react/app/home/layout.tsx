@@ -20,8 +20,18 @@ const HomeLayout: FC<{
 
 
   return <ClientWrapper>
-        <Login onLoginSuccess={handleLoginSuccess} />
-        {children}
+        
+    <Login onLoginSuccess={handleLoginSuccess} />
+    {!authenticated ? (
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+          <CircularProgress />  {/* Show spinner until authenticated */}
+        </Box>
+      ) : (
+        // When authenticated is true, render the children
+        <Box>
+          {children}
+        </Box>
+      )}
   </ClientWrapper>;
 };
 

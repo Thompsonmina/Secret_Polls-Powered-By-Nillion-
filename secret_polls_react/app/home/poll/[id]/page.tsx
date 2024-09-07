@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { Box, Typography } from "@mui/material";
-import { usePoll } from "@/app/components/PollContext";
+import { usePoll } from "@/app/hooks/use-poll";
 import { OwnerPollView, ParticipantPollView, PollResultView } from "@/app/components";
 
 // Dummy function to simulate fetching poll data from an API
@@ -20,21 +20,22 @@ import { OwnerPollView, ParticipantPollView, PollResultView } from "@/app/compon
 //     currentUserId: "1277893", // The current logged-in user
 //   };
 // };
-const fetchPollData = async (pollId: string) => {
-    try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/polls/${pollId}`);
-      if (!response.ok) {
-        throw new Error(`Error fetching poll with ID ${pollId}`);
-      }
-      const data = await response.json();
-      setPoll(data);
-      setLoading(false);
-    } catch (err) {
-      console.error(err);
-      setError(err.message);
-      setLoading(false);
-    }
-  };
+
+// const fetchPollData = async (pollId: string) => {
+//     try {
+//       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/polls/${pollId}`);
+//       if (!response.ok) {
+//         throw new Error(`Error fetching poll with ID ${pollId}`);
+//       }
+//       const data = await response.json();
+//       setPoll(data);
+//       setLoading(false);
+//     } catch (err) {
+//       console.error(err);
+//       setError(err.message);
+//       setLoading(false);
+//     }
+//   };
 
 const PollPage = () => {
   const { id } = useParams();  // Get the poll ID from the dynamic route
@@ -43,11 +44,13 @@ const PollPage = () => {
   if (!pollData) {
     return <Typography>Loading poll data...</Typography>;
   }
+  console.log(role, "role")
+  
 
   return (
     <Box sx={{ p: 4 }}>
       <Typography variant="h4" sx={{ mb: 4 }}>
-        Poll: {pollData.question}
+        Poll: {pollData.id}
       </Typography>
 
       {/* Conditional rendering based on the role from context */}
@@ -65,7 +68,10 @@ const PollPage = () => {
       {role === "participant" && (
         <ParticipantPollView
           question={pollData.question}
-          options={pollData.options}
+                  options={pollData.options}
+                  status={pollData.pollStatus}
+                  owner_id={pollData.ownerId}
+                  poll_id={pollData.id}
         />
       )}
 

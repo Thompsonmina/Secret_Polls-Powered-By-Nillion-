@@ -39,6 +39,7 @@ export const Login: FC<{ onLoginSuccess: () => void;}> = ({ onLoginSuccess }) =>
       }
       await login(credentials);
       setIsLoggingIn(false);
+      onLoginSuccess()
     } catch (err) {
       console.error(err);
     }

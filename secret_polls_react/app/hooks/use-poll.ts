@@ -17,7 +17,8 @@ export const usePoll = () => {
   
 // Dummy function to simulate fetching poll data from an API
   const fetchPollData = async (pollId: string) => {
-    return {
+      return {
+      id:4,
       question: "What is your favorite programming language?",
       options: ["Python", "JavaScript", "Go", "Rust"],
       expiry: "2024-12-01",
@@ -25,7 +26,7 @@ export const usePoll = () => {
       totalVotes: 100,
       votes: [50, 30, 10, 10], // votes for each option
       ownerId: "123", // Example owner ID
-      pollStatus: "active", // Can be "active" or "completed"
+      pollStatus: "active", // Can be "active" or "completed" or closed or paused or expired
       currentUserId: "1277893", // The current logged-in user
     };
   }
@@ -35,6 +36,7 @@ export const usePoll = () => {
       fetchPollData(id).then((data) => {
         setPollData(data);  // Set the poll data
 
+        
         // Determine the role based on API data
         if (data.pollStatus === "completed") {
           setRole("result");  // If poll is completed, show results
