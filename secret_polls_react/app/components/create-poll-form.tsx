@@ -45,7 +45,7 @@ export  function CreatePollForm() {
       passcode: visibility === "private" ? passcode : null, // Only include passcode if it's private
       expiration,
       max_participants: participants,
-      poll_owner_id: client.partyId
+      poll_owner_id: client.userId
     };
 
     try {

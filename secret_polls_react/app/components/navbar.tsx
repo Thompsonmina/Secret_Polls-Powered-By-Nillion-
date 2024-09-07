@@ -15,7 +15,9 @@ export const Navbar: FC = () => {
       <Toolbar>
         {/* Title */}
         <Typography variant="h6" sx={{ flexGrow: 1 }}>
-          Secret Polls
+          <Link href="/home" style={{ textDecoration: 'none', color: 'inherit' }}>
+            Secret Polls
+          </Link>
         </Typography>
 
         {/* Navigation Links */}
