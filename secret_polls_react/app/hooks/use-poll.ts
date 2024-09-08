@@ -58,7 +58,7 @@ export const usePoll = () => {
         question: data.question,
         options: [data.options.option_1, data.options.option_2, data.options.option_3, data.options.option_4],
         expiry: data.expiration,
-        totalVotes: data.max_participants, // You might want to adapt this according to how you're calculating votes
+        totalVotes: data.current_participants, // You might want to adapt this according to how you're calculating votes
         pollStatus: data.status,
         ownerId: data.owner_id,
         votes: [],
@@ -86,6 +86,7 @@ export const usePoll = () => {
             setRole("result");  // If poll is completed, show results
           } else if (data.ownerId === client.userId) {
               console.log(data.ownerId, "ownerid")
+              console.log("only owners yeah?")
             setRole("owner");  // If current user is the owner, show owner view
           } else {
               setRole("participant");  // Otherwise, the user is a participant

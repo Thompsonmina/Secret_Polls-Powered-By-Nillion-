@@ -40,8 +40,6 @@ export const ParticipantPollView: React.FC<ParticipantPollProps> = ({ question, 
   console.log("Poll status:", status, "whatchu mean");
 
 
-
-
     const store_poll_response = async (): Promise<StoreId | null> =>{ 
         const option_val = options.indexOf(selectedOption) + 1
         console.log(option_val, "options man")
@@ -56,7 +54,6 @@ export const ParticipantPollView: React.FC<ParticipantPollProps> = ({ question, 
     const program_name = `poll_${poll_id}_program`
     const program_id = `${owner_user_id}/${program_name}`
     // const program_id = `${client.userId}/${program_name}`
-    const other_userid = "4SZSub1FuvkVKrwEywdP5aLXSTCdd35U1n3TDRazjmvYKN6BK81gJrA1CkEPQFuhCbpKU19xaDhRmDNH6TF1w1sd"
 
     console.log(owner_user_id)
     // const program_id = `${client.userId}/poll_pls_program`

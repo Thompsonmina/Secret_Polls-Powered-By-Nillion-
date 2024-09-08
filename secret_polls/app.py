@@ -63,11 +63,11 @@ def get_poll(poll_id):
     if not poll:
         return jsonify({"error": "Poll not found"}), 404
 
-
     print(poll.participants_store_ids, "store ids kids")
     print('huhhhhhhhhhhhhhhhhhhh')
-    # Return the poll details as JSON
-    return jsonify({
+
+    # Base response without the results
+    poll_response = {
         "id": poll.id,
         "question": poll.question,
         "options": {
@@ -84,7 +84,18 @@ def get_poll(poll_id):
         "participants_party_ids": poll.participants_party_ids,
         "owner_id": poll.poll_owner_id,
         "poll_responses_input_store_ids": poll.participants_store_ids,
-    })
+    }
+
+    # If the poll is completed, add the results to the response
+    if poll.status == "completed":
+        poll_response["results"] = {
+            "option_1_votes": poll.option_1_votes,
+            "option_2_votes": poll.option_2_votes,
+            "option_3_votes": poll.option_3_votes,
+            "option_4_votes": poll.option_4_votes,
+        }
+
+    return jsonify(poll_response)
 
 @app.route('/polls/<int:poll_id>/add_participant', methods=['POST'])
 def edit_poll_add_participant(poll_id):
@@ -169,6 +180,43 @@ def fetch_poll_script(poll_id):
     except Exception as e:
         return jsonify({"error": f"Failed to generate or compile: {str(e)}"}), 500
 
+
+@app.route('/polls/<int:poll_id>/store_result', methods=['POST'])
+def store_poll_result(poll_id):
+    data = request.json
+
+    # Validate required fields
+    if 'result' not in data:
+        return jsonify({"error": "Missing result field"}), 400
+
+    poll = Poll.query.get(poll_id)
+
+    if not poll:
+        return jsonify({"error": "Poll not found"}), 404
+
+    # Parse the result (assuming it's a dictionary with option names and their vote counts)
+    result = data['result']
+    try:
+        poll.option_1_votes = int(result.get('option-1', 0))
+        poll.option_2_votes = int(result.get('option-2', 0))
+        poll.option_3_votes = int(result.get('option-3', 0))
+        poll.option_4_votes = int(result.get('option-4', 0))
+
+        # Commit the changes to store the result in the poll
+        db.session.commit()
+    except Exception as e:
+        return jsonify({"error": f"Failed to store result: {str(e)}"}), 500
+
+    return jsonify({
+        "message": "Poll result stored successfully",
+        "poll_id": poll.id,
+        "results": {
+            "option_1_votes": poll.option_1_votes,
+            "option_2_votes": poll.option_2_votes,
+            "option_3_votes": poll.option_3_votes,
+            "option_4_votes": poll.option_4_votes,
+        }
+    }), 200
 
 
 # Run the app

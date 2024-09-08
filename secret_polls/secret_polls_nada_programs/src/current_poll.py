@@ -8,12 +8,12 @@ def nada_main():
     pollowner  = Party(name="poll_owner")
     starting_val = SecretInteger(Input(name="starting_val", party=pollowner))
 
-    num_particpants = 3
+    num_particpants = 1
 # participants = na.parties(num_particpants, [f"Participant{{i + 1}}" for i in range(num_particpants)])
 
     responses = []
     for i in range(num_particpants):
-        responses.append( SecretInteger(Input(name=f"poll_3_p{i + 1}_response", party=pollowner)) )
+        responses.append( SecretInteger(Input(name=f"poll_2_p{i + 1}_response", party=pollowner)) )
 
     poll_results = {
        option: count_total_response_for_option(responses, Integer(option), starting_val)  for option in options

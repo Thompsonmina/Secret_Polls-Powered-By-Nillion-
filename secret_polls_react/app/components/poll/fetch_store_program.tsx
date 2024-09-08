@@ -3,6 +3,7 @@ import { useState } from "react";
 import { DownloadButton } from "./download_nada";
 import { PollCompute } from "./poll_compute";
 import { PollStoreProgram } from "./poll_store_program";
+import { PollComputeOutput } from "./poll_compute_output";
 
 type PollProgramProps = {
     poll_id: string;  // Poll ID
@@ -85,10 +86,13 @@ export const FetchStoreProgram: React.FC<PollProgramProps> = ({ poll_id, poll_st
             </Card>
           </Collapse>
           
-          {/* Mock Download Button (you may want to modify to fetch the actual file from the backend) */}
+                  <Box sx={{ m: 4, display: "flex", flexDirection: "column", gap: 4 }}>
                   <DownloadButton poll_id={poll_id} />
                   <PollStoreProgram programName={program_name} />
                   <PollCompute poll_id={poll_id} poll_store_ids={poll_store_ids} program_name={program_name} />
+                    <PollComputeOutput poll_id={poll_id} />
+                    </Box>
+
         </Box>
       )}
     </Box>
