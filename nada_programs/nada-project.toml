@@ -20,3 +20,8 @@ prime_size = 128
 path = "src/poll.py"
 name = "poll"
 prime_size = 128
+
+[[programs]]
+path = "src/demo_poll.py"
+name = "demo_poll"
+prime_size = 128

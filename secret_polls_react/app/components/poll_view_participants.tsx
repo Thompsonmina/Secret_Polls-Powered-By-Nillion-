@@ -5,8 +5,9 @@ import { LoadingButton } from "@mui/lab";
 
 import { useState } from "react";
 
-import { useNilStoreValue } from "@nillion/client-react-hooks";
-import { useNilCompute, useNillion } from "@nillion/client-react-hooks";
+import { useNilStoreValue,  useNilSetStoreAcl, useNillion } from "@nillion/client-react-hooks";
+import { StoreAcl, ProgramId, StoreId, UserId} from "@nillion/client-core";
+
 
 
 type ParticipantPollProps = {
@@ -22,10 +23,12 @@ export const ParticipantPollView: React.FC<ParticipantPollProps> = ({ question, 
     const [selectedOption, setSelectedOption] = useState("");
     const [submitSuccess, setSubmitSuccess] = useState<boolean | null>(null); // Track submission success
     const [loading, setLoading] = useState(false);
-    const [storedId, setStoredId] = useState<string | null>(null);
+    const [storeId, setStoreId] = useState<string | null>(null);
 
-    const nilStore = useNilStoreValue();
     const { client } = useNillion();
+    const nilStore = useNilStoreValue();
+    const nilSetStoreAcl = useNilSetStoreAcl();
+
 
 
 
@@ -37,6 +40,27 @@ export const ParticipantPollView: React.FC<ParticipantPollProps> = ({ question, 
         console.log("storing secret response", input_name)
         //   if (!secret) throw new Error("store-value: Value required");
         return nilStore.executeAsync({ name: input_name, data: option_val, ttl: 1 }!);
+    }
+
+    const add_compute_permissions_to_program = (): any => {
+        const program_name = `poll_${poll_id}_program`
+        // const program_id = `${owner_user_id}/${program_name}`
+        // const program_id = `${client.userId}/${program_name}`
+        const other_userid = "4SZSub1FuvkVKrwEywdP5aLXSTCdd35U1n3TDRazjmvYKN6BK81gJrA1CkEPQFuhCbpKU19xaDhRmDNH6TF1w1sd"
+
+        // const program_id = `${client.userId}/poll_pls_program`
+        const program_id = `${other_userid}/poll_pls_program`
+        
+
+        // const acl = StoreAcl.create()
+        const acl = StoreAcl.createDefaultForUser(UserId.parse(other_userid));
+        const compute_acl = acl.allowCompute(UserId.parse(other_userid), ProgramId.parse(program_id))
+        console.log(acl, "Acl")
+        console.log(compute_acl, "Cacl")
+
+        console.log(storeId, "sid", program_id)
+        return nilSetStoreAcl.executeAsync({ id:StoreId.parse(storeId), acl:acl });
+
     }
     
 
@@ -50,18 +74,23 @@ export const ParticipantPollView: React.FC<ParticipantPollProps> = ({ question, 
 
     try {
         // Execute the function and wait for the result
-        const storeId = await store_poll_response()
+        const _storeId = await store_poll_response()
 
         // Store the resulting ID or any data from the result
 
-        setStoredId(storeId); 
+        setStoreId(_storeId); 
         console.log("Stored ID:", storeId);
+
+        const result = await add_compute_permissions_to_program()
+        console.log(result, "compute?")
 
     } catch (error) {
         console.error("Error storing value:", error);
     } finally {
         setLoading(false);  // Hide spinner after the operation completes
     }
+      
+      
       
       
 

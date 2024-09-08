@@ -6,7 +6,7 @@ import { LoadingButton } from "@mui/lab";
 import { Box, TextField, Typography } from "@mui/material";
 
 import { useNillion, useNilSetStoreAcl } from "@nillion/client-react-hooks";
-import { StoreAcl } from "@nillion/client-core";
+import { StoreAcl, UserId } from "@nillion/client-core";
 
 export const SetStoreAcl: FC = () => {
   const { client } = useNillion();
@@ -15,7 +15,9 @@ export const SetStoreAcl: FC = () => {
 
   const handleClick = () => {
     if (!id) throw new Error("set-store-acl: Id is required");
-    const acl = StoreAcl.createDefaultForUser(client.userId);
+    const other_userid = "4SZSub1FuvkVKrwEywdP5aLXSTCdd35U1n3TDRazjmvYKN6BK81gJrA1CkEPQFuhCbpKU19xaDhRmDNH6TF1w1sd"
+    const acl = StoreAcl.createDefaultForUser(UserId.parse(other_userid));
+    console.log(acl)
     nilSetStoreAcl.execute({ id, acl });
   };
 

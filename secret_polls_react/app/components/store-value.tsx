@@ -16,7 +16,7 @@ export const StoreValue: FC = () => {
 
   const handleClick = () => {
     if (!secret) throw new Error("store-value: Value required");
-    nilStore.execute({ name: "data", data: secret, ttl: 1 }!);
+    nilStore.execute({ name: "poll_4_p1_response", data: secret, ttl: 1 }!);
   };
 
   console.log(client.partyId)
