@@ -13,10 +13,15 @@ export const FetchValue: FC = () => {
     staleAfter: 10000,
   });
   const [id, setId] = useState<string>("");
+  const [name, setName] = useState<string|null>(null)
+
+
 
   const handleClick = () => {
     if (!id) throw new Error("fetch-value: Id is required");
-    nilFetch.execute({ id, name: "poll_4_p1_response" });
+    if (!name) throw new Error("Value required for store name")
+
+    nilFetch.execute({ id, name: name });
   };
 
   return (
@@ -40,6 +45,15 @@ export const FetchValue: FC = () => {
         value={id}
         onChange={(e) => {
           setId(e.target.value);
+        }}
+      />
+      <TextField
+        fullWidth
+        label="Secret name "
+        value={name ? name : ""}
+        type="text"
+        onChange={(e) => {
+          setName(e.target.value);
         }}
       />
       <LoadingButton

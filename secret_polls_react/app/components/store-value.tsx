@@ -12,11 +12,13 @@ import { useNilCompute, useNillion } from "@nillion/client-react-hooks";
 export const StoreValue: FC = () => {
   const nilStore = useNilStoreValue();
   const [secret, setSecret] = useState<number | null>(null);
+  const [name, setName] = useState<string|null>(null)
   const { client } = useNillion();
 
   const handleClick = () => {
     if (!secret) throw new Error("store-value: Value required");
-    nilStore.execute({ name: "poll_4_p1_response", data: secret, ttl: 1 }!);
+    if (!name) throw new Error("Value required for store name")
+    nilStore.execute({ name: name, data: secret, ttl: 1 }!);
   };
 
   console.log(client.partyId)
@@ -42,6 +44,15 @@ export const StoreValue: FC = () => {
         type="number"
         onChange={(e) => {
           setSecret(Number(e.target.value));
+        }}
+      />
+      <TextField
+        fullWidth
+        label="Secret name "
+        value={name ? name : ""}
+        type="text"
+        onChange={(e) => {
+          setName(e.target.value);
         }}
       />
       <LoadingButton

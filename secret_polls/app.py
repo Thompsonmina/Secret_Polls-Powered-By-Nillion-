@@ -81,6 +81,62 @@ def get_poll(poll_id):
         "owner_id": poll.poll_owner_id
     })
 
+@app.route('/polls/<int:poll_id>/add_participant', methods=['POST'])
+def edit_poll_add_participant(poll_id):
+    data = request.json  # Expecting JSON payload
+
+    # Validate required fields
+    required_fields = ['party_id', 'store_id', 'party_name']
+    missing_fields = [field for field in required_fields if field not in data]
+    if missing_fields:
+        return jsonify({"error": f"Missing fields: {', '.join(missing_fields)}"}), 400
+    
+
+    poll = Poll.query.get(poll_id)
+    
+    if not poll:
+        return jsonify({"error": "Poll not found"}), 404
+
+    # Check if the poll is active
+    if poll.status != 'active':
+        return jsonify({"error": "Participants can only be added when the poll is active."}), 400
+
+    try:
+        # Add the participant using the add_participant_to_poll function
+        poll = add_participant_to_poll(poll_id, data['party_id'], data['store_id'], data['party_name'])
+        return jsonify({
+            "message": "Participant added successfully",
+            "poll_id": poll.id,
+            "current_participants": poll.current_participants
+        }), 200
+
+    except ValueError as e:
+        return jsonify({"error": str(e)}), 400
+    
+@app.route('/polls/<int:poll_id>/status', methods=['PUT'])
+def update_poll_status(poll_id):
+    data = request.json
+
+    # Ensure the status field is provided
+    if 'status' not in data:
+        return jsonify({"error": "Missing 'status' field"}), 400
+
+    # Retrieve the poll by ID
+    poll = Poll.query.get(poll_id)
+    
+    if not poll:
+        return jsonify({"error": "Poll not found"}), 404
+
+    # Update the poll status
+    new_status = data['status']
+    poll.status = new_status
+
+    # Commit the changes to the database
+    db.session.commit()
+
+    return jsonify({"message": "Poll status updated successfully", "new_status": poll.status}), 200
+
+
 
 # Run the app
 if __name__ == '__main__':

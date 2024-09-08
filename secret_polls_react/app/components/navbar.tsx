@@ -23,7 +23,7 @@ export const Navbar: FC = () => {
         {/* Navigation Links */}
         <Box>
           <Button color="inherit">                      
-            <Link href="home/create-poll" style={{ textDecoration: 'none', color: 'inherit' }}>
+            <Link href="/home/create-poll" style={{ textDecoration: 'none', color: 'inherit' }}>
                 Create A Poll
             </Link>
           </Button>

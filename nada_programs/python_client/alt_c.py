@@ -19,8 +19,8 @@ from cosmpy.aerial.wallet import LocalWallet
 from cosmpy.crypto.keypairs import PrivateKey
 
 home = os.getenv("HOME")
-load_dotenv(f"{home}/.config/nillion/nillion-devnet.env")
-# load_dotenv(".env")
+# load_dotenv(f"{home}/.config/nillion/nillion-devnet.env")
+load_dotenv(".env")
 
 async def main():
     # 1. Initial setup

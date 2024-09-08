@@ -35,8 +35,15 @@ class Poll(db.Model):
     status = db.Column(db.String, default="active")  # active, locked, done
     expiration = db.Column(db.DateTime, default=datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(days=3))  # Default: 3 days from now
     max_participants = db.Column(db.Integer, default=5)  # Default: 5 participants
-    participants_party_ids = db.Column(JsonEncodedList)
+    participants_party_ids = db.Column(JsonEncodedList)  # To store participant Party IDs
+    participants_store_ids = db.Column(JsonEncodedList)  # To store participant Store IDs
+    participants_party_names = db.Column(JsonEncodedList)  # To store participant Party Names
     current_participants = db.Column(db.Integer, default=0)
+
+    def __repr__(self):
+        return f"<Poll(id={self.id}, question={self.question}, owner_user_id={self.poll_owner_id}, visibility={self.visibility}, current_participants={self.current_participants}, party_ids={self.participants_party_ids}, store_ids={self.participants_store_ids}, party_names={self.participants_party_names})>"
+
+
 
     def __repr__(self):
         return f"<Poll(id={self.id}, question={self.question}, owner_user_id={self.poll_owner_id}, visibility={self.visibility}, current_participants={self.current_participants}, party_ids={self.participants_party_ids})>"
@@ -94,4 +101,33 @@ def add_participant_to_poll(poll_id, party_id):
     db.session.commit()
 
     print(f"Party ID {party_id} added to poll {poll_id}. Current participants: {poll.current_participants}")
+    return poll
+
+def add_participant_to_poll(poll_id, party_id, store_id, party_name):
+    poll = Poll.query.filter_by(id=poll_id).first()
+
+    if poll is None:
+        raise ValueError(f"No poll found with ID {poll_id}")
+
+    # Check if the poll has reached the maximum number of participants
+    if poll.current_participants >= poll.max_participants:
+        raise ValueError(f"Poll {poll_id} has reached the maximum number of participants.")
+
+    # Append the new participant information to the lists
+    updated_party_ids = poll.participants_party_ids + [party_id]
+    updated_store_ids = poll.participants_store_ids + [store_id]
+    updated_party_names = poll.participants_party_names + [party_name]
+
+    # Reassign the lists to the poll object
+    poll.participants_party_ids = updated_party_ids
+    poll.participants_store_ids = updated_store_ids
+    poll.participants_party_names = updated_party_names
+    
+    # Update the participant count
+    poll.current_participants += 1
+
+    # Commit the changes
+    db.session.commit()
+
+    print(f"Party ID {party_id}, Store ID {store_id}, and Party Name {party_name} added to poll {poll_id}. Current participants: {poll.current_participants}")
     return poll

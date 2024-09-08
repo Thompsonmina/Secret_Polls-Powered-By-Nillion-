@@ -39,7 +39,7 @@ import { OwnerPollView, ParticipantPollView, PollResultView } from "@/app/compon
 
 const PollPage = () => {
   const { id } = useParams();  // Get the poll ID from the dynamic route
-  const { role, setRole, setPollStatus, setParticipantsCount, pollData} = usePoll();  // Access poll context
+  const { role, pollStatus, setRole, setPollStatus, setParticipantsCount, pollData} = usePoll();  // Access poll context
 
   if (!pollData) {
     return <Typography>Loading poll data...</Typography>;
@@ -61,9 +61,10 @@ const PollPage = () => {
           question={pollData.question}
           options={pollData.options}
           visibility="public"
-          status={pollData.pollStatus}
-          participantsCount={pollData.participantsCount}
+          status={pollStatus}
+          participantsCount={pollData.current_participants}
           expiry={pollData.expiry}
+          poll_id={pollData.id} 
         />
       )}
 
@@ -75,7 +76,8 @@ const PollPage = () => {
                   owner_user_id={pollData.ownerId}
                   poll_id={pollData.id}
                   current_participants={pollData.current_participants}
-        />
+                  setPollStatus={setPollStatus}
+              />
       )}
 
       {role === "result" && (

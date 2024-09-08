@@ -1,4 +1,5 @@
-def generate_script_file(num_participants, poll_num, filename):
+def generate_script_file(num_participants, poll_num, overide_parties=True, filename=None):
+        
     template = '''
 from nada_dsl import *
 import nada_numpy as na

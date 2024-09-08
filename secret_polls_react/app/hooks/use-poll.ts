@@ -58,11 +58,12 @@ export const usePoll = () => {
         question: data.question,
         options: [data.options.option_1, data.options.option_2, data.options.option_3, data.options.option_4],
         expiry: data.expiration,
-        participantsCount: data.current_participants,
         totalVotes: data.max_participants, // You might want to adapt this according to how you're calculating votes
         pollStatus: data.status,
         ownerId: data.owner_id,
-        votes: []
+        votes: [],
+          current_participants: data.current_participants,
+          participants_party_ids: data.participants_party_ids,
       };
     } catch (error) {
       console.error('Error fetching poll data:', error);
@@ -86,12 +87,20 @@ export const usePoll = () => {
               console.log(data.ownerId, "ownerid")
             setRole("owner");  // If current user is the owner, show owner view
           } else {
-            setRole("participant");  // Otherwise, the user is a participant
+              setRole("participant");  // Otherwise, the user is a participant
+
+              console.log(client.partyId, data.participants_party_ids, "dem party ids")
+              if (data.participants_party_ids.includes(client.partyId)){
+                  setPollStatus("already_voted")
+              }
+            
           }
   
           // Update the poll status and participants count
           setPollStatus(data.pollStatus);
-          setParticipantsCount(data.participantsCount);
+            //   setParticipantsCount(data.participantsCount);
+            console.log(pollStatus)
+
         }
       }).catch(error => {
         console.error('Failed to fetch poll data:', error);
