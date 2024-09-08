@@ -47,6 +47,8 @@ def create_poll_route():
         max_participants_count=data.get('max_participants', 5)  # Default: 5 participants if not provided
     )
 
+    print(poll)
+
     return jsonify({
         "message": "Poll created successfully",
         "poll_id": poll.id,
@@ -75,7 +77,8 @@ def get_poll(poll_id):
         "expiration": poll.expiration.isoformat() if poll.expiration else None,
         "max_participants": poll.max_participants,
         "current_participants": poll.current_participants,
-        "participants_party_ids": poll.participants_party_ids
+        "participants_party_ids": poll.participants_party_ids,
+        "owner_id": poll.poll_owner_id
     })
 
 

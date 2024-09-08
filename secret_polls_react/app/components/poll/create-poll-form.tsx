@@ -48,6 +48,20 @@ export  function CreatePollForm() {
       poll_owner_id: client.userId
     };
 
+    // {
+    //   id:4,
+    //   question: "What is your favorite programming language?",
+    //   options: ["Python", "JavaScript", "Go", "Rust"],
+    //   expiry: "2024-12-01",
+    //   participantsCount: 75,
+    //   totalVotes: 100,
+    //   votes: [50, 30, 10, 10], // votes for each option
+    //   ownerId: "123", // Example owner ID
+    //   pollStatus: "active", // Can be "active" or "completed" or closed or paused or expired
+    //   currentUserId: "1277893", // The current logged-in user
+    //   current_participants: 0
+    // };
+
     try {
         const response = await fetch(`${apiUrl}/polls`, {
           method: "POST",

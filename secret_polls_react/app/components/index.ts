@@ -10,7 +10,7 @@ export * from "./store-program";
 export * from "./store-value";
 export * from "./update-value";
 export * from "./navbar"
-export * from "./create-poll-form"
-export * from "./poll_view_owner"
-export * from "./poll_view_participants"
-export * from "./poll_view_results"
+export * from "./poll/create-poll-form"
+export * from "./poll/poll_view_owner"
+export * from "./poll/poll_view_participants"
+export * from "./poll/poll_view_results"

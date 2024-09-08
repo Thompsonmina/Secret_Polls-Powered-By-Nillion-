@@ -39,7 +39,7 @@ class Poll(db.Model):
     current_participants = db.Column(db.Integer, default=0)
 
     def __repr__(self):
-        return f"<Poll(id={self.id}, question={self.question}, visibility={self.visibility}, current_participants={self.current_participants}, party_ids={self.participants_party_ids})>"
+        return f"<Poll(id={self.id}, question={self.question}, owner_user_id={self.poll_owner_id}, visibility={self.visibility}, current_participants={self.current_participants}, party_ids={self.participants_party_ids})>"
 
 
 # Poll creation function
