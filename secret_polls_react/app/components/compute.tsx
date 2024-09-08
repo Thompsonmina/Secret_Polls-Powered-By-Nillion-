@@ -12,6 +12,7 @@ import {
   PartyName,
   ProgramBindings,
   ProgramId,
+  StoreId,
 } from "@nillion/client-core";
 import { useNilCompute, useNillion } from "@nillion/client-react-hooks";
 
@@ -24,14 +25,17 @@ export const Compute: FC = () => {
     if (!programId) throw new Error("compute: program id required");
 
     const bindings = ProgramBindings.create(programId)
-      .addInputParty(PartyName.parse("Party1"), client.partyId)
-      .addOutputParty(PartyName.parse("Party1"), client.partyId);
+      .addInputParty(PartyName.parse("Participant1"), client.partyId)
+      .addOutputParty(PartyName.parse("Participant1"), client.partyId);
 
     const values = NadaValues.create()
-      .insert(NamedValue.parse("A"), NadaValue.createSecretInteger(2))
-      .insert(NamedValue.parse("B"), NadaValue.createSecretInteger(4));
+      .insert(NamedValue.parse("starting_val"), NadaValue.createSecretInteger(0))
 
-    nilCompute.execute({ bindings, values });
+    const storeids = [StoreId.parse("5c71f878-5e5b-4379-9e3a-4e73206929ab")]
+
+
+    console.log("started computing")
+    nilCompute.execute({ bindings, values, storeIds:storeids });
   };
 
   return (
