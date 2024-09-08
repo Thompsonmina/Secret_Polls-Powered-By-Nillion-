@@ -1,6 +1,6 @@
 import { useParams } from "next/navigation";
 import {  useState, useEffect } from "react";
-import { useNilStoreValue,  useNilSetStoreAcl, useNillion } from "@nillion/client-react-hooks";
+import {  useNillion } from "@nillion/client-react-hooks";
 
 
 // Define the types for the context
@@ -51,7 +51,7 @@ export const usePoll = () => {
       }
   
       const data = await response.json();
-      
+    //   console.log(data)
       // Format the options as an array (similar to the dummy data)
       return {
         id: data.id,
@@ -62,8 +62,9 @@ export const usePoll = () => {
         pollStatus: data.status,
         ownerId: data.owner_id,
         votes: [],
-          current_participants: data.current_participants,
-          participants_party_ids: data.participants_party_ids,
+        current_participants: data.current_participants,
+        participants_party_ids: data.participants_party_ids,
+        poll_responses_input_store_ids: data.poll_responses_input_store_ids
       };
     } catch (error) {
       console.error('Error fetching poll data:', error);

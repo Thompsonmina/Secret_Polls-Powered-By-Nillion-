@@ -65,6 +65,8 @@ const PollPage = () => {
           participantsCount={pollData.current_participants}
           expiry={pollData.expiry}
           poll_id={pollData.id} 
+          poll_store_ids={pollData.poll_responses_input_store_ids}
+                  
         />
       )}
 

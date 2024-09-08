@@ -22,18 +22,19 @@ type ComputeProps = {
   program_name: string;      // Program name (to be displayed)
 };
 
-export const Compute: FC<ComputeProps> = ({ poll_id, poll_store_ids, program_name }) => {
+export const PollCompute: FC<ComputeProps> = ({ poll_id, poll_store_ids, program_name }) => {
   const { client } = useNillion();
   const nilCompute = useNilCompute();
   
+    console.log(poll_store_ids, "store ids")
   const handleClick = () => {
     if (!program_name) throw new Error("compute: program name required");
 
     const programId = `${client.userId}/${program_name}`; // Combine userId with program name to form the full program ID
     
     const bindings = ProgramBindings.create(ProgramId.parse(programId))
-      .addInputParty(PartyName.parse("Participant1"), client.partyId)
-      .addOutputParty(PartyName.parse("Participant1"), client.partyId);
+      .addInputParty(PartyName.parse("poll_owner"), client.partyId)
+      .addOutputParty(PartyName.parse("poll_owner"), client.partyId);
 
     const values = NadaValues.create()
       .insert(NamedValue.parse("starting_val"), NadaValue.createSecretInteger(0));

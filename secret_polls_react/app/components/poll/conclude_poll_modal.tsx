@@ -6,9 +6,10 @@ type ConcludePollModalProps = {
   open: boolean;
     handleClose: () => void;
     poll_id: string;
+    poll_store_ids: string[];
 };
 
-export const ConcludePollModal: React.FC<ConcludePollModalProps> = ({ open, handleClose, poll_id }) => {
+export const ConcludePollModal: React.FC<ConcludePollModalProps> = ({ open, handleClose, poll_id, poll_store_ids }) => {
   return (
     <Modal
       open={open}
@@ -24,7 +25,7 @@ export const ConcludePollModal: React.FC<ConcludePollModalProps> = ({ open, hand
         <Typography id="modal-modal-title" variant="h4" component="h2" gutterBottom>
           Conclude Poll - Fetch Poll Program
         </Typography>
-        <FetchStoreProgram poll_id={poll_id} />
+              <FetchStoreProgram poll_id={poll_id} poll_store_ids={poll_store_ids} />
       </Box>
     </Modal>
   );

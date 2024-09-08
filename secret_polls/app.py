@@ -63,6 +63,9 @@ def get_poll(poll_id):
     if not poll:
         return jsonify({"error": "Poll not found"}), 404
 
+
+    print(poll.participants_store_ids, "store ids kids")
+    print('huhhhhhhhhhhhhhhhhhhh')
     # Return the poll details as JSON
     return jsonify({
         "id": poll.id,
@@ -79,7 +82,8 @@ def get_poll(poll_id):
         "max_participants": poll.max_participants,
         "current_participants": poll.current_participants,
         "participants_party_ids": poll.participants_party_ids,
-        "owner_id": poll.poll_owner_id
+        "owner_id": poll.poll_owner_id,
+        "poll_responses_input_store_ids": poll.participants_store_ids,
     })
 
 @app.route('/polls/<int:poll_id>/add_participant', methods=['POST'])

@@ -12,14 +12,16 @@ type PollProps = {
   participantsCount: number;
   expiry: string;
   poll_id: string;
+  poll_store_ids: string[];
 };
 
-export const OwnerPollView: React.FC<PollProps> = ({ question, options, visibility, status, participantsCount, expiry, poll_id }) => {
+export const OwnerPollView: React.FC<PollProps> = ({ question, options, visibility, status, participantsCount, expiry, poll_id, poll_store_ids }) => {
   const [isPaused, setIsPaused] = useState(status === "paused");
   const [isConcluded, setIsConcluded] = useState(status === "concluded");
   const [modalOpen, setModalOpen] = useState(false);
 
 
+  console.log(poll_store_ids, "ownerpollview")
   const handlePauseResume = async () => {
     try {
       // Toggle pause state
@@ -105,7 +107,7 @@ export const OwnerPollView: React.FC<PollProps> = ({ question, options, visibili
           </Typography>
         )}
       </Box>
-      <ConcludePollModal open={modalOpen} handleClose={handleCloseModal} poll_id={poll_id } />
+      <ConcludePollModal open={modalOpen} handleClose={handleCloseModal} poll_id={poll_id } poll_store_ids={poll_store_ids} />
     </Box>
   );
 };

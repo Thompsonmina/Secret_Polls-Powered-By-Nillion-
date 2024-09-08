@@ -1,19 +1,23 @@
 import { Box, Button, Typography, Collapse, Card, CardContent } from "@mui/material";
 import { useState } from "react";
 import { DownloadButton } from "./download_nada";
+import { PollCompute } from "./poll_compute";
+import { PollStoreProgram } from "./poll_store_program";
 
 type PollProgramProps = {
     poll_id: string;  // Poll ID
+    poll_store_ids: string[];
 };
   
-export const FetchStoreProgram: React.FC<PollProgramProps> = ({ poll_id }) => {
+export const FetchStoreProgram: React.FC<PollProgramProps> = ({ poll_id, poll_store_ids }) => {
   const [programCode, setProgramCode] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   
   // Define the API URL (based on environment variables or hardcoded URL)
-  const apiUrl = process.env.NEXT_PUBLIC_SECRET_POLLS_API_URL || "http://localhost:5000"; 
+    const apiUrl = process.env.NEXT_PUBLIC_SECRET_POLLS_API_URL || "http://localhost:5000"; 
+    const program_name = `poll_${poll_id}_program`;
 
   // Fetch poll program from backend
   const fetchPollProgram = async () => {
@@ -82,7 +86,9 @@ export const FetchStoreProgram: React.FC<PollProgramProps> = ({ poll_id }) => {
           </Collapse>
           
           {/* Mock Download Button (you may want to modify to fetch the actual file from the backend) */}
-                  <DownloadButton poll_id={ poll_id} />
+                  <DownloadButton poll_id={poll_id} />
+                  <PollStoreProgram programName={program_name} />
+                  <PollCompute poll_id={poll_id} poll_store_ids={poll_store_ids} program_name={program_name} />
         </Box>
       )}
     </Box>
