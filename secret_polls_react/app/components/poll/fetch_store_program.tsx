@@ -2,22 +2,46 @@ import { Box, Button, Typography, Collapse, Card, CardContent } from "@mui/mater
 import { useState } from "react";
 import { DownloadButton } from "./download_nada";
 
-export const FetchStoreProgram: React.FC = () => {
+type PollProgramProps = {
+    poll_id: string;  // Poll ID
+};
+  
+export const FetchStoreProgram: React.FC<PollProgramProps> = ({ poll_id }) => {
   const [programCode, setProgramCode] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  
+  // Define the API URL (based on environment variables or hardcoded URL)
+  const apiUrl = process.env.NEXT_PUBLIC_SECRET_POLLS_API_URL || "http://localhost:5000"; 
 
-  // Mock fetching poll program from backend
+  // Fetch poll program from backend
   const fetchPollProgram = async () => {
-    // Simulate fetching the code from the backend
-    const mockProgramCode = `
-    # Poll Program
-    def poll_program():
-      responses = fetch_responses()
-      result = compute_result(responses)
-      return result
-    `;
-    setProgramCode(mockProgramCode);
-    setOpen(true);
+    setLoading(true);
+    setError(null); // Clear any previous errors
+
+    try {
+      // Call the Flask API to fetch the script
+      const response = await fetch(`${apiUrl}/polls/${poll_id}/script`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setProgramCode(data.script);
+        setOpen(true); // Automatically show the code on successful fetch
+      } else {
+        const errorData = await response.json();
+        setError(errorData.error || "Failed to fetch poll program");
+      }
+    } catch (error) {
+      setError("Something went wrong while fetching the poll program.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -26,9 +50,16 @@ export const FetchStoreProgram: React.FC = () => {
         variant="contained" 
         sx={{ backgroundColor: '#0D47A1', color: '#fff', '&:hover': { backgroundColor: '#1565C0' } }} 
         onClick={fetchPollProgram}
+        disabled={loading}  // Disable the button while loading
       >
-        Fetch Poll Program
+        {loading ? "Fetching..." : "Fetch Poll Program"}
       </Button>
+      
+      {error && (
+        <Typography color="error" sx={{ mt: 2 }}>
+          {error}
+        </Typography>
+      )}
       
       {programCode && (
         <Box sx={{ mt: 2 }}>
@@ -50,6 +81,7 @@ export const FetchStoreProgram: React.FC = () => {
             </Card>
           </Collapse>
           
+          {/* Mock Download Button (you may want to modify to fetch the actual file from the backend) */}
           <DownloadButton />
         </Box>
       )}

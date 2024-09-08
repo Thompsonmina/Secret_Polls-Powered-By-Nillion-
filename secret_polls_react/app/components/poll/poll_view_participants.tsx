@@ -29,7 +29,8 @@ export const ParticipantPollView: React.FC<ParticipantPollProps> = ({ question, 
   
     const { client } = useNillion();
     const nilStore = useNilStoreValue();
-    const nilSetStoreAcl = useNilSetStoreAcl();
+  const nilSetStoreAcl = useNilSetStoreAcl();
+  
     
   const apiUrl = process.env.NEXT_PUBLIC_SECRET_POLLS_API_URL;
   

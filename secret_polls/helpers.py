@@ -39,7 +39,6 @@ def count_total_response_for_option(all_responses: List[SecretInteger], option: 
 
     return total_response_for_option
 
-nada_main()
 
 '''
     
@@ -68,4 +67,6 @@ nada_main()
     return script_content
 
 # Example usage
-# generate_script_file(5, 3, override_parties=True, filename='generated_poll_script.py')
+
+if __name__ == "__main__":
+    generate_script_file(5, 3, override_parties=True, filename='generated_poll_script.py')

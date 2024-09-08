@@ -105,7 +105,7 @@ export const OwnerPollView: React.FC<PollProps> = ({ question, options, visibili
           </Typography>
         )}
       </Box>
-      <ConcludePollModal open={modalOpen} handleClose={handleCloseModal} />
+      <ConcludePollModal open={modalOpen} handleClose={handleCloseModal} poll_id={poll_id } />
     </Box>
   );
 };
