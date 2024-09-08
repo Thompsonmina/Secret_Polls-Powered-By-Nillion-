@@ -1,0 +1,14 @@
+---
+program: poll
+inputs:
+  poll_3_p1_response: 3
+  poll_3_p2_response: 3
+  poll_3_p3_response: 1
+  poll_3_p4_response: 3
+  poll_3_p5_response: 2
+  starting_val: 0
+expected_outputs:
+  option-1: 3
+  option-2: 3
+  option-3: 8
+  option-4: 3

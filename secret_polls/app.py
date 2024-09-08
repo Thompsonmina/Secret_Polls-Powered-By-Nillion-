@@ -1,8 +1,9 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_file
 from flask_cors import CORS
 
 from model import db, Poll, create_poll, get_poll_by_id, add_participant_to_poll
 from config import Config
+from helpers import generate_script_file
 
 
 app = Flask(__name__)
@@ -135,6 +136,30 @@ def update_poll_status(poll_id):
     db.session.commit()
 
     return jsonify({"message": "Poll status updated successfully", "new_status": poll.status}), 200
+
+@app.route('/polls/<int:poll_id>/script', methods=['GET'])
+def fetch_poll_script(poll_id):
+    # Fetch the poll by ID
+    poll = Poll.query.get(poll_id)
+    
+    if not poll:
+        return jsonify({"error": "Poll not found"}), 404
+    
+    # Number of participants can be derived from the poll's current participants
+    num_participants = poll.current_participants
+    poll_num = poll.id  # We use the poll_id as the poll number for script generation
+    
+    try:
+        # Generate the script file (filename is optional, let it be auto-generated)
+        script = generate_script_file(num_participants=num_participants, poll_num=poll_num, override_parties=True)
+        
+        # Send the generated file as a response
+        # return send_file(script_file_path, as_attachment=True, download_name=f'poll_{poll_num}_script.py')
+
+        return jsonify({"message": "Poll script generated", "script":script}), 200
+    
+    except Exception as e:
+        return jsonify({"error": f"Failed to generate script: {str(e)}"}), 500
 
 
 

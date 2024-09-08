@@ -1,16 +1,10 @@
 ---
 program: demo_poll
 inputs:
-  poll_4_p1_response:
-    SecretInteger: "3"
-  starting_val:
-    SecretInteger: "0"
+  poll_4_p1_response: 3
+  starting_val: 3
 expected_outputs:
-  option-1:
-    SecretInteger: "3"
-  option-4:
-    SecretInteger: "3"
-  option-3:
-    SecretInteger: "3"
-  option-2:
-    SecretInteger: "3"
+  option-1: 3
+  option-2: 3
+  option-3: 4
+  option-4: 3

@@ -40,6 +40,7 @@ def count_total_response_for_option(all_responses: List[SecretInteger], option: 
     return total_response_for_option
 
 nada_main()
+
 '''
     
     # Conditional logic based on override_parties
