@@ -1,3 +1,5 @@
+import os
+import subprocess
 
 
 def generate_script_file(num_participants, poll_num, override_parties=True, filename=None):
@@ -66,7 +68,54 @@ def count_total_response_for_option(all_responses: List[SecretInteger], option: 
 
     return script_content
 
-# Example usage
+
+
+def compile_poll_program(num_participants, poll_num, override_parties=True, filename=None):
+    # Generate the Python script using generate_script_file
+    script_filename = './secret_polls_nada_programs/src/current_poll.py'
+    
+    try:
+        generate_script_file(num_participants=num_participants, poll_num=poll_num, override_parties=override_parties, filename=script_filename)
+        print(f"Script generated successfully: {script_filename}")
+    except Exception as e:
+        raise RuntimeError(f"Failed to generate script: {str(e)}")
+    
+    # Change the current working directory to secret_polls_nada_programs
+    try:
+        os.chdir('secret_polls_nada_programs')
+        print(f"Changed directory to: {os.getcwd()}")
+    except Exception as e:
+        raise RuntimeError(f"Failed to change directory: {str(e)}")
+    
+    # Run the 'nada build' command and capture the output
+    try:
+        result = subprocess.run(['nada', 'build'], capture_output=True, text=True)
+        output = result.stdout
+        error = result.stderr
+        
+        # Check if the build was successful by parsing the output
+        if 'Build complete!' in output:
+            print(f"Build output:\n{output}")
+            binary_filepath = './target/current_poll.nada.bin'
+            if os.path.exists(binary_filepath):
+                print(f"Build succeeded, binary file: {binary_filepath}")
+                return "./secret_polls_nada_programs/target/current_poll.nada.bin"
+            else:
+                raise RuntimeError(f"Build succeeded, but binary file was not found: {binary_filepath}")
+        else:
+            print(f"Build failed with output:\n{output}\nErrors:\n{error}")
+            raise RuntimeError("Build failed.")
+    except Exception as e:
+        raise RuntimeError(f"Error during build process: {str(e)}")
+    finally:
+        # Change back to the original directory
+        os.chdir('..')
+        print(f"Returned to original directory: {os.getcwd()}")
+        return "./secret_polls_nada_programs/target/current_poll.nada.bin"
+
+    
+
 
 if __name__ == "__main__":
-    generate_script_file(5, 3, override_parties=True, filename='generated_poll_script.py')
+    # generate_script_file(5, 3, override_parties=True, filename='./secret_polls_nada_programs/src/current_poll.py')
+    compile_poll_program(10, 4, override_parties=True, filename='./secret_polls_nada_programs/src/current_poll.py')

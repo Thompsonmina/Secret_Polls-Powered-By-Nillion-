@@ -82,7 +82,7 @@ export const FetchStoreProgram: React.FC<PollProgramProps> = ({ poll_id }) => {
           </Collapse>
           
           {/* Mock Download Button (you may want to modify to fetch the actual file from the backend) */}
-          <DownloadButton />
+                  <DownloadButton poll_id={ poll_id} />
         </Box>
       )}
     </Box>

@@ -1,0 +1,10 @@
+name = "secret_polls_nada_programs"
+version = "0.1.0"
+authors = [""]
+
+
+
+[[programs]]
+path = "src/current_poll.py"
+name = "current_poll"
+prime_size = 128

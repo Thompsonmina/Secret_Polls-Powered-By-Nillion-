@@ -3,7 +3,7 @@ from flask_cors import CORS
 
 from model import db, Poll, create_poll, get_poll_by_id, add_participant_to_poll
 from config import Config
-from helpers import generate_script_file
+from helpers import generate_script_file, compile_poll_program
 
 
 app = Flask(__name__)
@@ -137,7 +137,7 @@ def update_poll_status(poll_id):
 
     return jsonify({"message": "Poll status updated successfully", "new_status": poll.status}), 200
 
-@app.route('/polls/<int:poll_id>/script', methods=['GET'])
+@app.route('/polls/<int:poll_id>/script', methods=['GET', 'POST'])
 def fetch_poll_script(poll_id):
     # Fetch the poll by ID
     poll = Poll.query.get(poll_id)
@@ -150,16 +150,20 @@ def fetch_poll_script(poll_id):
     poll_num = poll.id  # We use the poll_id as the poll number for script generation
     
     try:
-        # Generate the script file (filename is optional, let it be auto-generated)
-        script = generate_script_file(num_participants=num_participants, poll_num=poll_num, override_parties=True)
+        # Handle GET request: Fetch the generated script
+        if request.method == 'GET':
+            script = generate_script_file(num_participants=num_participants, poll_num=poll_num, override_parties=True)
+            return jsonify({"message": "Poll script generated", "script": script}), 200
         
-        # Send the generated file as a response
-        # return send_file(script_file_path, as_attachment=True, download_name=f'poll_{poll_num}_script.py')
-
-        return jsonify({"message": "Poll script generated", "script":script}), 200
+        # Handle POST request: Compile the program and return the binary file
+        elif request.method == 'POST':
+            binary_file_path = compile_poll_program(num_participants=num_participants, poll_num=poll_num, override_parties=True)
+            
+            # Send the compiled binary file
+            return send_file(binary_file_path, as_attachment=True, download_name=f'poll_{poll_num}_compiled.nada.bin')
     
     except Exception as e:
-        return jsonify({"error": f"Failed to generate script: {str(e)}"}), 500
+        return jsonify({"error": f"Failed to generate or compile: {str(e)}"}), 500
 
 
 
@@ -167,4 +171,4 @@ def fetch_poll_script(poll_id):
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()  # Create database tables if they don't exist
-    app.run(debug=True)
+    app.run(debug=False)
